@@ -4,6 +4,7 @@ const fileUpload = require('express-fileupload');
 const convertapi = require('convertapi')(process.env.API_KEY);
 const open = require('open');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,9 +19,15 @@ app.use((req, res, next) => {
 
 app.post('/upload', (req, res) => {
     if (req.files === null) return res.status(400).json({ msg: 'No file uploaded' });
-    
+
+    if (!fs.existsSync(__dirname+'/public')) {
+        fs.mkdirSync(__dirname+'/public');
+        fs.mkdirSync(__dirname+'/public/uploads');
+        fs.mkdirSync(__dirname+'/public/outputs');
+    }
+
     const file = req.files.file;
-    console.log(__dirname)
+    
     file.mv(`${__dirname}/public/uploads/${file.name}`, err => {
         if (err) {
             console.error(err);
