@@ -24,15 +24,15 @@ app.get('/', (req, res) => {
 app.post('/upload', (req, res) => {
     if (req.files === null) return res.status(400).json({ msg: 'No file uploaded' });
 
-    if (!fs.existsSync(__dirname+'/public')) {
-        fs.mkdirSync(__dirname+'/public');
-        fs.mkdirSync(__dirname+'/public/uploads');
-        fs.mkdirSync(__dirname+'/public/outputs');
-    }
+    // if (!fs.existsSync(__dirname+'/public')) {
+    //     fs.mkdirSync(__dirname+'/public');
+    //     fs.mkdirSync(__dirname+'/public/uploads');
+    //     fs.mkdirSync(__dirname+'/public/outputs');
+    // }
 
     const file = req.files.file;
     
-    file.mv(`${__dirname}/public/uploads/${file.name}`, err => {
+    file.mv(`${__dirname}/${file.name}`, err => {
         if (err) {
             console.error(err);
             return res.status(500).send(err);
@@ -41,10 +41,11 @@ app.post('/upload', (req, res) => {
         res.json({ msg: 'File moved!' });
     });
 
-    convertapi.convert('pdf', { File: path.resolve(`${__dirname}/public/uploads/${file.name}`) })
+    convertapi.convert('pdf', { File: path.resolve(`${__dirname}/${file.name}`) })
     .then(function(result) {
         open(result.file.url)
-        return result.file.save(path.resolve(`${__dirname}/public/outputs/${file.name.split('.')[0]}.pdf`));
+        // return result.file.save(path.resolve(`${__dirname}/public/outputs/${file.name.split('.')[0]}.pdf`));
+        return;
     })
     .then(function(file) {
         console.log('File saved!');
