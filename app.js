@@ -17,6 +17,10 @@ app.use((req, res, next) => {
     next();
 })
 
+app.get('/', (req, res) => {
+    res.send('Hello world!');
+})
+
 app.post('/upload', (req, res) => {
     if (req.files === null) return res.status(400).json({ msg: 'No file uploaded' });
 
